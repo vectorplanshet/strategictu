@@ -1166,6 +1166,17 @@ function getNextObjectId() {
     `;
     return iconHTML;
 }
+    fetch('line.json')
+      .then(res => res.json())
+      .then(data => {
+        L.geoJSON(data, {
+          style: {
+            color: 'red',
+            weight: 1,
+            fill: false
+          }
+        }).addTo(map);
+      })
 
 
     </script>
