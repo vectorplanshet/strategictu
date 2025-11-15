@@ -1090,50 +1090,17 @@ fetch("front.json")
   let polygons = {};
 let menuVisible = false;
 
-fetch('trevoga.json')
-    .then(response => response.json())
-    .then(geojsonData => {
-        let regions = {};
-        geojsonData.features.forEach(feature => {
-            let name = feature.properties.name;
-            regions[name] = feature;
-        });
-
-        // Автоматически активируем "Луганская область" и "А. Р Крым"
-        const autoActivateRegions = ["Луганская область", "А.Р Крым"];
-        
-        document.querySelectorAll('#alert-menu input[type=checkbox]').forEach(checkbox => {
-            checkbox.onchange = function() {
-                let region = checkbox.id;
-                if (checkbox.checked && regions[region]) {
-                    let layer = L.geoJSON(regions[region], {
-                        style: { color: 'red', fillColor: 'red', fillOpacity: 0.1, weight: 0.6 }
-                    }).addTo(map);
-                    polygons[region] = layer;
-                } else if (polygons[region]) {
-                    map.removeLayer(polygons[region]);
-                    delete polygons[region];
-                }
-            };
-
-            // Автоматически ставим галочку для нужных регионов и активируем их
-            if (autoActivateRegions.includes(checkbox.id)) {
-                checkbox.checked = true;
-                checkbox.onchange();  // Вызываем onchange вручную для активированного региона
-            }
-        });
-
-        // Обработчик для чекбокса "По всей территории"
-        document.getElementById('По всей территории').onchange = function() {
-            let isChecked = this.checked;
-            document.querySelectorAll('#alert-menu input[type=checkbox]').forEach(checkbox => {
-                if (checkbox.id !== 'По всей территории') {
-                    checkbox.checked = isChecked;
-                    checkbox.onchange();  // Активируем или деактивируем регионы в зависимости от состояния
-                }
-            });
-        };
-    });
+fetch('okkyp.json')
+  .then(res => res.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: {
+          stroke: false,        // 🔥 отключает контур
+        fillColor: 'red',
+        fillOpacity: 0.1      // прозрачность, подбери
+      }
+    }).addTo(map);
+  });
 
 document.getElementById('alert-button').onclick = function() {
     menuVisible = !menuVisible;
@@ -1166,19 +1133,28 @@ function getNextObjectId() {
     `;
     return iconHTML;
 }
-    fetch('line.json')
-      .then(res => res.json())
-      .then(data => {
-        L.geoJSON(data, {
-          style: {
-            color: 'red',
-            weight: 1,
-            fill: false
-          }
-        }).addTo(map);
-      })
+fetch('line.json')
+  .then(res => res.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: {
+        color: 'red',
+        weight: 1.5
+      }
+    }).addTo(map);
+  });
 
-
+fetch('okkyp.json')
+  .then(res => res.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: {
+        stroke: false,        // 🔥 отключает контур
+        fillColor: '#e6a57a',
+        fillOpacity: 0.3      // прозрачность, подбери
+      }
+    }).addTo(map);
+  });
     </script>
 </body>
 </html>
